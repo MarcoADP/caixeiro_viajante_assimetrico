@@ -1,0 +1,33 @@
+
+http://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/index.html
+
+https://docs.ufpr.br/~volmir/PO_II_12_TSP.pdf
+
+instancia:      LIT     CW1     CW2
+br17:           39      41      41
+ft53:           6905    12512   9664
+ft70:           38673   51702   42074
+ftv33:          1286    1860    1432
+ftv35:          1473    2323    1780
+ftv38:          1530    2391    1837
+ftv44:          1613    2551    1808
+ftv47:          1776    2857    2085
+ftv55:          1608    2916    1951
+ftv64:          1839    3404    2349
+ftv70:          1950    3732    2577
+ftv90:  1579
+ftv100: 1788
+ftv110: 1958
+ftv120: 2166
+ftv130: 2307
+ftv140: 2420
+ftv150: 2611
+ftv160: 2683
+ftv170:         2755    6572    4324
+kro124: 36230
+p43: 5620
+rbg323: 1326
+rbg358: 1163
+rbg403: 2465
+rbg443: 2720
+ry48p: 14422
