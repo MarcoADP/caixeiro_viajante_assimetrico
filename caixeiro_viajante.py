@@ -1,6 +1,10 @@
 import numpy as np
 import timeit
+import itertools
 
+#
+# LEITURA
+#
 def ler_arquivo(file):
     f = open('instancias/' + file + '.atsp', 'r')
     return f.read().split('\n')
@@ -30,7 +34,7 @@ def get_grafo(informacoes, vertices):
             matriz[i][j] = peso
             j = j + 1
 
-    return matriz
+    return matriz.astype(int)
 
 
 def copia_matrix(solucao):
@@ -40,12 +44,23 @@ def copia_matrix(solucao):
             copia[i][j] = solucao[i][j]
     return copia
 
+#
+# CLARKE WRIGHT
+#
+def calcular_caminho(solucao, origem, caminho):
+    for destino in range(len(solucao[origem])):
+        if solucao[origem][destino] != np.inf:
+            caminho.insert(len(caminho), (origem, destino))
+            solucao[origem][destino] = np.inf
+            return calcular_caminho(solucao, destino, caminho)
+    return caminho
+
 
 def mesma_rota(u, v, origem, solucao):
-    solucao, soma = calcular_solucao(copia_matrix(solucao), origem, [], 0)
+    caminho = calcular_caminho(copia_matrix(solucao), origem, [])
     u_rota = False
     v_rota = False
-    for x, y in solucao:
+    for x, y in caminho:
         if x == 0:
             u_rota = False
             v_rota = False
@@ -58,7 +73,7 @@ def mesma_rota(u, v, origem, solucao):
     return False
 
 
-def clark_wright(grafo, vertices, origem):
+def clarke_wright(grafo, vertices, origem):
     economias_dict = {}
 
     solucao = np.full((vertices, vertices), np.inf)
@@ -95,18 +110,49 @@ def clark_wright(grafo, vertices, origem):
 
     return solucao
 
+#
+# 3-OPT
+#
+def verifica_troca(grafo, caminho, a, b, c):
+    aux = caminho[a]
+    caminho[a] = caminho[b]
+    caminho[b] = aux
+
+    return 0
+
+
+
+def three_opt(grafo, caminho, vertices):
+    combinacoes = itertools.combinations(range(vertices), 3)
+    while True:
+        delta = 0
+        for idx, (a, b, c) in enumerate(combinacoes):
+            delta = delta + verifica_troca(grafo, caminho, a, b, c)
+        if delta >= 0:
+            break
+        break
+
 
 def calcular_solucao(solucao, origem, caminho, soma):
     for destino in range(len(solucao[origem])):
         if solucao[origem][destino] != np.inf:
-            caminho.insert(len(caminho), (origem, destino))
+            #caminho.insert(len(caminho), (origem, destino))
+            caminho[origem] = destino
             soma = soma + solucao[origem][destino]
             solucao[origem][destino] = np.inf
             return calcular_solucao(solucao, destino, caminho, soma)
-    return caminho, soma
+    return caminho.astype(int), soma
 
 
-def main(file='teste', origem=0):
+def mostrar_caminho(caminho, origem):
+    for i in range(len(caminho)):
+        destino = caminho[origem]
+        print((origem, destino), end=' - ')
+        origem = destino
+    print('')
+
+
+def main(file='br17', origem=0):
     np.set_printoptions(suppress=True)
     start = timeit.default_timer()
     informacoes = ler_arquivo(file)
@@ -115,13 +161,14 @@ def main(file='teste', origem=0):
     matriz_adjacencia = get_grafo(informacoes, vertices)
     # print(matriz_adjacencia)
 
-    solucao = clark_wright(matriz_adjacencia, vertices, origem)
+    solucao = clarke_wright(matriz_adjacencia, vertices, origem)
     # print(type(solucao))
-    caminho, soma = calcular_solucao(copia_matrix(solucao), origem, [], 0)
-    print(caminho)
-    #print(soma)
+    caminho, soma = calcular_solucao(copia_matrix(solucao), origem, np.full(vertices, np.inf), 0)
+    mostrar_caminho(caminho, origem)
+    three_opt(matriz_adjacencia, caminho, vertices)
+    print(soma)
     stop = timeit.default_timer()
     print('Time: ', stop - start)
     return soma
 
-#main(file='br17')
+main(file='br17')
