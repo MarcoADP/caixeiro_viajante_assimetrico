@@ -41,6 +41,13 @@ def copia_matrix(solucao):
     return copia
 
 
+def copia_lista(lista):
+    copia = []
+    for i in range(len(lista)):
+        copia.insert(i, lista[i])
+    return copia
+
+
 def mesma_rota(u, v, origem, solucao):
     solucao, soma = calcular_solucao(copia_matrix(solucao), origem, [], 0)
     u_rota = False
@@ -107,13 +114,16 @@ def calcular_solucao(solucao, origem, caminho, soma):
 
 #////////////////////// 3OPT /////////////////////////////
 
+
 def verifica_adjacencia(matriz_adjacencia, i, j):
      if matriz_adjacencia[i][j] != None:  # Verifica se existe adjacência entre dois vértices
         return True
      return False
 
+
 def tam_caminho(matriz_adjacencia, percurso):
      return len(percurso)  #Retorna o tamanho do caminho
+
 
 def calc_distancia(matriz_adjacencia, percurso):
     soma = 0
@@ -123,9 +133,11 @@ def calc_distancia(matriz_adjacencia, percurso):
                 soma += matriz_adjacencia[percurso[i]][percurso[i + 1]] #Faz a soma do caminho
     return soma
 
+
 def distancia(matriz_adjacencia, a, b):
     if verifica_adjacencia(matriz_adjacencia, a, b):
         return matriz_adjacencia[a][b]  #retorna a distância entre dois pontos
+
 
 def tresopt(matriz_adjacencia, caminho):
     print("Caminho inicial gerado pelo Clark-Wright: ", caminho)
@@ -134,59 +146,90 @@ def tresopt(matriz_adjacencia, caminho):
     for i in range(len(caminho)-1):
         for j in range(i+2, len(caminho)-1):
             for k in range(j+2, len(caminho)-1):
+
                 opcao = 0
                 forma_atual = distancia(matriz_adjacencia, caminho[i], caminho[i+1])+ distancia(matriz_adjacencia, caminho[j], caminho[j+1])+ distancia(matriz_adjacencia, caminho[k], caminho[k+1])
-                if forma_atual>distancia(matriz_adjacencia, caminho[i],caminho[i + 1]) + distancia(matriz_adjacencia, caminho[j],caminho[k]) + distancia(matriz_adjacencia, caminho[j + 1],caminho[k + 1]):
+
+                if forma_atual > distancia(matriz_adjacencia, caminho[i],caminho[i + 1]) + distancia(matriz_adjacencia, caminho[j],caminho[k]) + distancia(matriz_adjacencia, caminho[j + 1],caminho[k + 1]):
                     forma_atual = distancia(matriz_adjacencia, caminho[i],caminho[i + 1]) + distancia(matriz_adjacencia, caminho[j],caminho[k]) + distancia(matriz_adjacencia, caminho[j + 1],caminho[k + 1])
                     opcao = 1
-                if forma_atual> distancia(matriz_adjacencia, caminho[i],caminho[j]) + distancia(matriz_adjacencia, caminho[i + 1],caminho[j + 1]) + distancia(matriz_adjacencia, caminho[k],caminho[k + 1]):
+
+                if forma_atual > distancia(matriz_adjacencia, caminho[i],caminho[j]) + distancia(matriz_adjacencia, caminho[i + 1],caminho[j + 1]) + distancia(matriz_adjacencia, caminho[k],caminho[k + 1]):
                     forma_atual = distancia(matriz_adjacencia, caminho[i],caminho[j]) + distancia(matriz_adjacencia, caminho[i + 1],caminho[j + 1]) + distancia(matriz_adjacencia, caminho[k],caminho[k + 1])
                     opcao = 2
-                if forma_atual> distancia(matriz_adjacencia, caminho[i],caminho[j]) + distancia(matriz_adjacencia, caminho[i + 1],caminho[k]) + distancia(matriz_adjacencia, caminho[j + 1],caminho[k + 1]):
+
+                if forma_atual > distancia(matriz_adjacencia, caminho[i],caminho[j]) + distancia(matriz_adjacencia, caminho[i + 1],caminho[k]) + distancia(matriz_adjacencia, caminho[j + 1],caminho[k + 1]):
                     forma_atual = distancia(matriz_adjacencia, caminho[i],caminho[j]) + distancia(matriz_adjacencia, caminho[i + 1],caminho[k]) + distancia(matriz_adjacencia, caminho[j + 1],caminho[k + 1])
                     opcao = 3
-                if forma_atual> distancia(matriz_adjacencia, caminho[i],caminho[j + 1]) + distancia(matriz_adjacencia, caminho[k],caminho[i + 1]) + distancia(matriz_adjacencia, caminho[j],caminho[k + 1]):
+
+                if forma_atual > distancia(matriz_adjacencia, caminho[i],caminho[j + 1]) + distancia(matriz_adjacencia, caminho[k],caminho[i + 1]) + distancia(matriz_adjacencia, caminho[j],caminho[k + 1]):
                     forma_atual = distancia(matriz_adjacencia, caminho[i],caminho[j + 1]) + distancia(matriz_adjacencia, caminho[k],caminho[i + 1]) + distancia(matriz_adjacencia, caminho[j],caminho[k + 1])
                     opcao = 4
-                if forma_atual> distancia(matriz_adjacencia, caminho[i],caminho[j + 1]) + distancia(matriz_adjacencia, caminho[k],caminho[j]) + distancia(matriz_adjacencia, caminho[i + 1],caminho[k + 1]):
+
+                if forma_atual > distancia(matriz_adjacencia, caminho[i],caminho[j + 1]) + distancia(matriz_adjacencia, caminho[k],caminho[j]) + distancia(matriz_adjacencia, caminho[i + 1],caminho[k + 1]):
                     forma_atual = distancia(matriz_adjacencia, caminho[i], caminho[j + 1]) + distancia(matriz_adjacencia, caminho[k],caminho[j]) + distancia(matriz_adjacencia, caminho[i + 1],caminho[k + 1])
                     opcao = 5
-                if forma_atual> distancia(matriz_adjacencia, caminho[i],caminho[k]) + distancia(matriz_adjacencia, caminho[j + 1], caminho[i + 1]) + distancia(matriz_adjacencia, caminho[j],caminho[k + 1]):
+
+                if forma_atual > distancia(matriz_adjacencia, caminho[i],caminho[k]) + distancia(matriz_adjacencia, caminho[j + 1], caminho[i + 1]) + distancia(matriz_adjacencia, caminho[j],caminho[k + 1]):
                     forma_atual = distancia(matriz_adjacencia, caminho[i],caminho[k]) + distancia(matriz_adjacencia, caminho[k],caminho[i + 1]) + distancia(matriz_adjacencia, caminho[j],caminho[k + 1])
                     opcao = 6
-                if forma_atual> distancia(matriz_adjacencia, caminho[i],caminho[k]) + distancia(matriz_adjacencia, caminho[j + 1],caminho[j]) + distancia(matriz_adjacencia, caminho[i + 1],caminho[k + 1]):
+                if forma_atual > distancia(matriz_adjacencia, caminho[i],caminho[k]) + distancia(matriz_adjacencia, caminho[j + 1],caminho[j]) + distancia(matriz_adjacencia, caminho[i + 1],caminho[k + 1]):
                     forma_atual = distancia(matriz_adjacencia, caminho[i],caminho[k]) + distancia(matriz_adjacencia, caminho[j + 1],caminho[j]) + distancia(matriz_adjacencia, caminho[i + 1],caminho[k + 1])
                     opcao = 7
-                if opcao==1:
+
+                caminho_aux = copia_lista(caminho)
+                if opcao == 1:
                     caminho[j+1:k+1] = reversed(caminho[j+1:k+1])
-                if opcao==2:
+
+                if opcao == 2:
                     caminho[i + 1:j + 1] = reversed(caminho[i + 1:j + 1])
-                if opcao==3:
+
+                if opcao == 3:
                     caminho[i + 1:j + 1], caminho[j + 1:k + 1] = reversed(caminho[i + 1:j + 1]), reversed(caminho[j + 1:k + 1])
-                if opcao==4:
+
+                if opcao == 4:
                     caminho = caminho[:i + 1] + caminho[j + 1:k + 1] + caminho[i + 1:j + 1] + caminho[k + 1:]
-                if opcao==5:
+
+                if opcao == 5:
                     aux = caminho[:i + 1] + caminho[j + 1:k + 1]
                     aux += reversed(caminho[i + 1:j + 1])
                     aux += caminho[k + 1:]
                     caminho = aux
-                if opcao==6:
+
+                if opcao == 6 :
                     aux = caminho[:i + 1]
                     aux += reversed(caminho[j + 1:k + 1])
                     aux += caminho[i + 1:j + 1]
                     aux += caminho[k + 1:]
                     caminho = aux
-                if opcao==7:
+
+                if opcao == 7:
                     aux = caminho[:i + 1]
                     aux += reversed(caminho[j + 1:k + 1])
                     aux += reversed(caminho[i + 1:j + 1])
                     aux += caminho[k + 1:]
                     caminho = aux
+
+                if calc_distancia(matriz_adjacencia, caminho) > calc_distancia(matriz_adjacencia, caminho_aux):
+                    caminho = caminho_aux
+
+                #print("Contagem parcial:", calc_distancia(matriz_adjacencia, caminho))
+
     print(' ')
     print("Caminho final gerado pelo 3-OPT:", caminho)
     print("Contagem final:", calc_distancia(matriz_adjacencia, caminho))
 
+
+def get_entrada_tresopt(caminho):
+    caminho_3opt = []
+    for x,y in caminho:
+        caminho_3opt.insert(len(caminho_3opt), x)
+    caminho_3opt.insert(len(caminho_3opt), y)
+    return caminho_3opt
+
+
 #///////// Main /////////
+
 
 def main(file='teste', origem=0):
     np.set_printoptions(suppress=True)
@@ -200,7 +243,7 @@ def main(file='teste', origem=0):
     solucao = clark_wright(matriz_adjacencia, vertices, origem)
     # print(type(solucao))
     caminho, soma = calcular_solucao(copia_matrix(solucao), origem, [], 0)
-    
+
     print('')
     print('Caminho gerado pelo Clark-Wright:', caminho)
     print('Contagem: ', soma)
@@ -208,10 +251,13 @@ def main(file='teste', origem=0):
     print('Time de execução Clark-Wright: ', stop - start)
     print('')
 
-    caminho2 = [0, 11, 13, 2, 12, 10, 9, 1, 16, 8, 7, 15, 4, 3, 14, 6, 5, 0]
-    tps1 = time.clock()
-    tresopt(matriz_adjacencia, caminho2)
-    tps2 = time.clock()
+    caminho_3opt = get_entrada_tresopt(caminho)
+                    #[0, 11, 13, 2, 12, 10, 9, 1, 16, 8, 7, 15, 4, 3, 14, 6, 5]
+    #caminho_3opt = [0, 11, 13, 2, 12, 10, 9, 1, 16, 8, 7, 15, 4, 3, 14, 6, 5, 0]
+    tps1 = timeit.default_timer()
+    tresopt(matriz_adjacencia, caminho_3opt)
+    tps2 = timeit.default_timer()
     print("Time de execução 3-OPT :", tps2 - tps1)
 
-main(file='br17')
+
+main(file='kro124p')
