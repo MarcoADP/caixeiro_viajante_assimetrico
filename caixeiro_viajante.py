@@ -120,15 +120,10 @@ def verifica_adjacencia(matriz_adjacencia, i, j):
         return True
      return False
 
-
-def tam_caminho(percurso):
-     return len(percurso)  #Retorna o tamanho do caminho
-
-
 def calc_distancia(matriz_adjacencia, percurso):
     soma = 0
-    if tam_caminho(percurso)>1:
-        for i in range(tam_caminho(percurso) - 1):
+    if len(percurso)>1:
+        for i in range(len(percurso) - 1):
             if verifica_adjacencia(matriz_adjacencia, percurso[i], percurso[i+1]):
                 soma += matriz_adjacencia[percurso[i]][percurso[i + 1]] #Faz a soma do caminho
     return soma
