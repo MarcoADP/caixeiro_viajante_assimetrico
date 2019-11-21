@@ -1,8 +1,9 @@
 import numpy as np
 import timeit
+import sys
 
 def ler_arquivo(file):
-    f = open('instancias/' + file + '.atsp', 'r')
+    f = open(file, 'r')
     return f.read().split('\n')
 
 
@@ -93,13 +94,16 @@ def clark_wright(grafo, vertices, origem):
     #Passo 4 - Inserindo as economias possíveis
     a = 0
     t = len(economias_lista)
+    # caminho, soma = calcular_solucao(copia_matrix(solucao), origem, [], 0)
+    # print(soma)
     for (u, v), valor in economias_lista:
         a = a + 1
         if (solucao[u][origem] != np.inf and solucao[origem][v] != np.inf) and (not mesma_rota(u, v, origem, copia_matrix(solucao))):
             solucao[u][origem] = np.inf
             solucao[origem][v] = np.inf
             solucao[u][v] = grafo[u][v]
-
+            # caminho, soma = calcular_solucao(copia_matrix(solucao), origem, [], 0)
+            # print(soma)
     return solucao
 
 
@@ -116,19 +120,15 @@ def calcular_solucao(solucao, origem, caminho, soma):
 
 
 def verifica_adjacencia(matriz_adjacencia, i, j):
-     if matriz_adjacencia[i][j] != None:  # Verifica se existe adjacência entre dois vértices
+    if matriz_adjacencia[i][j] != None:  # Verifica se existe adjacência entre dois vértices
         return True
-     return False
-
-
-def tam_caminho(matriz_adjacencia, percurso):
-     return len(percurso)  #Retorna o tamanho do caminho
+    return False
 
 
 def calc_distancia(matriz_adjacencia, percurso):
     soma = 0
-    if tam_caminho(matriz_adjacencia, percurso)>1:
-        for i in range(tam_caminho(matriz_adjacencia, percurso) - 1):
+    if len(percurso) > 1:
+        for i in range(len(percurso) - 1):
             if verifica_adjacencia(matriz_adjacencia, percurso[i], percurso[i+1]):
                 soma += matriz_adjacencia[percurso[i]][percurso[i + 1]] #Faz a soma do caminho
     return soma
@@ -210,14 +210,19 @@ def tresopt(matriz_adjacencia, caminho):
                     aux += caminho[k + 1:]
                     caminho = aux
 
-                if calc_distancia(matriz_adjacencia, caminho) > calc_distancia(matriz_adjacencia, caminho_aux):
-                    caminho = caminho_aux
+                if opcao != 0:
+                    if calc_distancia(matriz_adjacencia, caminho) > calc_distancia(matriz_adjacencia, caminho_aux):
+                        caminho = caminho_aux
+                    # else:
+                    #     print(calc_distancia(matriz_adjacencia, caminho))
 
                 #print("Contagem parcial:", calc_distancia(matriz_adjacencia, caminho))
 
+    soma = calc_distancia(matriz_adjacencia, caminho)
     print(' ')
     print("Caminho final gerado pelo 3-OPT:", caminho)
-    print("Contagem final:", calc_distancia(matriz_adjacencia, caminho))
+    print("Contagem final:", soma)
+    return soma
 
 
 def get_entrada_tresopt(caminho):
@@ -231,7 +236,7 @@ def get_entrada_tresopt(caminho):
 #///////// Main /////////
 
 
-def main(file='teste', origem=0):
+def main(file='br17', origem=0):
     np.set_printoptions(suppress=True)
     start = timeit.default_timer()
     informacoes = ler_arquivo(file)
@@ -239,7 +244,7 @@ def main(file='teste', origem=0):
     vertices = int(get_informacao(informacoes, 'DIMENSION'))
     matriz_adjacencia = get_grafo(informacoes, vertices)
     # print(matriz_adjacencia)
-
+    print('INSTANCIA: ', instancia)
     solucao = clark_wright(matriz_adjacencia, vertices, origem)
     # print(type(solucao))
     caminho, soma = calcular_solucao(copia_matrix(solucao), origem, [], 0)
@@ -255,9 +260,12 @@ def main(file='teste', origem=0):
                     #[0, 11, 13, 2, 12, 10, 9, 1, 16, 8, 7, 15, 4, 3, 14, 6, 5]
     #caminho_3opt = [0, 11, 13, 2, 12, 10, 9, 1, 16, 8, 7, 15, 4, 3, 14, 6, 5, 0]
     tps1 = timeit.default_timer()
-    tresopt(matriz_adjacencia, caminho_3opt)
+    soma = tresopt(matriz_adjacencia, caminho_3opt)
     tps2 = timeit.default_timer()
     print("Time de execução 3-OPT :", tps2 - tps1)
+    return soma
 
+if __name__ == "__main__":
+    main(sys.argv[1])
 
-main(file='kro124p')
+#main(file='kro124p')
