@@ -124,10 +124,9 @@ def verifica_adjacencia(matriz_adjacencia, i, j):
         return True
     return False
 
-
 def calc_distancia(matriz_adjacencia, percurso):
     soma = 0
-    if len(percurso) > 1:
+    if len(percurso)>1:
         for i in range(len(percurso) - 1):
             if verifica_adjacencia(matriz_adjacencia, percurso[i], percurso[i+1]):
                 soma += matriz_adjacencia[percurso[i]][percurso[i + 1]] #Faz a soma do caminho
@@ -257,15 +256,13 @@ def main(file='br17', origem=0):
     print('')
 
     caminho_3opt = get_entrada_tresopt(caminho)
-                    #[0, 11, 13, 2, 12, 10, 9, 1, 16, 8, 7, 15, 4, 3, 14, 6, 5]
-    #caminho_3opt = [0, 11, 13, 2, 12, 10, 9, 1, 16, 8, 7, 15, 4, 3, 14, 6, 5, 0]
-    tps1 = timeit.default_timer()
+    start = timeit.default_timer()
     soma = tresopt(matriz_adjacencia, caminho_3opt)
-    tps2 = timeit.default_timer()
-    print("Time de execução 3-OPT :", tps2 - tps1)
+    stop = timeit.default_timer()
+    print('Time de execução 3-OPT: ', stop - start)
     return soma
 
 if __name__ == "__main__":
     main(sys.argv[1])
 
-#main(file='kro124p')
+#main(file='kro124p.atsp')
